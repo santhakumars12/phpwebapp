@@ -1,0 +1,8 @@
+version: 0.0
+resources:
+  - php-application:
+      type: EC2
+      properties:
+        image: public.ecr.aws/q8g8u5l5/phpwebapp:latest
+        container-name: my-php-app
+
