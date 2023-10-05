@@ -1,29 +1,20 @@
 version: 0.2
 
+env:
+  variables:
+    ECR_REGISTRY: "389560765612.dkr.ecr.ap-south-1.amazonaws.com/phpwebappprivate"
+    DOCKER_IMAGE_NAME: "phpwebapp"
 
 phases:
-  pre_build:
-    commands:
-      - echo Logging in to Amazon ECR...
-      - aws --version
-      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPOSITORY_URI=389560765612.dkr.ecr.ap-south-1.amazonaws.com/phpwebappprivate
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+    - echo "Build phase"
+    - export AWS_ECR_PASSWORD=$(aws ecr-public get-login-password --region ap-south-1)
+    - echo $AWS_ECR_PASSWORD | docker login --username AWS --password-stdin $ECR_REGISTRY
+    - docker build -t $DOCKER_IMAGE_NAME .
+    - docker tag $DOCKER_IMAGE_NAME:latest $ECR_REGISTRY/$DOCKER_IMAGE_NAME:latest
+    - docker push $ECR_REGISTRY/$DOCKER_IMAGE_NAME:latest
+
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo Writing image definitions file...
-      - printf '[{"name":"nodeapp","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-      - cat imagedefinitions.json 
-artifacts:
-    files: imagedefinitions.json
+    - echo "Build successfully completed"
