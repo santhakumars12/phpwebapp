@@ -4,9 +4,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - mvn clean install
       - echo Logging in to Amazon ECR...
-      - aws --version
       - $(aws ecr get-login --region ap-south-1 --no-include-email)
       - REPOSITORY_URI=389560765612.dkr.ecr.ap-south-1.amazonaws.com/phpwebappprivate
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
