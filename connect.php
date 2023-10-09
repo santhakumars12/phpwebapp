@@ -7,7 +7,7 @@
 	$number = $_POST['number'];
 
 	// Database connection
-	$conn = new mysqli('mysql-database.ce426ifleuoh.ap-south-1.rds.amazonaws.com','master','5fKoqEt0k9HrCcWEmeiI','test');
+	$conn = new mysqli('registration-database.cdub9qacoohr.us-east-1.rds.amazonaws.com','admin','admin123','test');
 	if($conn->connect_error){
 		echo "$conn->connect_error";
 		die("Connection Failed : ". $conn->connect_error);
