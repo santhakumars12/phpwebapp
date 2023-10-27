@@ -7,7 +7,7 @@
 	$number = $_POST['number'];
 
 	// Database connection
-	$conn = new mysqli('registration-database.cdub9qacoohr.us-east-1.rds.amazonaws.com','admin','admin123','test');
+	$conn = new mysqli('elasticbeanstalk-database.cqwah9wkbkfz.us-east-2.rds.amazonaws.com','admin','admin*123','test');
 	if($conn->connect_error){
 		echo "$conn->connect_error";
 		die("Connection Failed : ". $conn->connect_error);
